@@ -6,10 +6,13 @@ from keras.preprocessing.sequence import pad_sequences
 
 class QQPDataFrame:
 
-    def __init__(self, path):
-        self.qqp_df = pd.read_csv(path).fillna("")
+    def __init__(self, path=None):
+        self.seq_len = 50
         self.qqp_df_train = None
         self.qqp_df_test = None
+
+        if path is not None:
+            self.qqp_df = pd.read_csv(path).fillna("")
 
         self.tokenizer = Tokenizer(lower=False)
 
@@ -37,15 +40,15 @@ class QQPDataFrame:
         question1, question2 = self.get_as_sequence(data_frame=self.qqp_df_test)
         return question1, question2, self.qqp_df_test['is_duplicate']
 
-    def get_predict_data(self, question1, question2):
+    def get_prediction_data(self, question1, question2):
         data_frame = pd.DataFrame({'question1': [question1], 'question2': [question2]})
         return self.get_as_sequence(data_frame=data_frame)
 
-    def get_as_sequence(self, data_frame, max_seq_len=50):
+    def get_as_sequence(self, data_frame):
         question1 = self.tokenizer.texts_to_sequences(data_frame['question1'])
-        question1 = pad_sequences(question1, maxlen=max_seq_len)
+        question1 = pad_sequences(question1, maxlen=self.seq_len)
 
         question2 = self.tokenizer.texts_to_sequences(data_frame['question2'])
-        question2 = pad_sequences(question2, maxlen=max_seq_len)
+        question2 = pad_sequences(question2, maxlen=self.seq_len)
 
         return question1, question2

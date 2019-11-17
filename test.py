@@ -25,7 +25,7 @@ while True:
     print('Q1:', q1)
     print('Q2:', q2)
 
-    q1, q2 = qqp_df.get_predict_data(q1, q2)
+    q1, q2 = qqp_df.get_prediction_data(q1, q2)
 
     is_duplicate = np.dot(q1, q2.T)
     print('is_duplicate:', is_duplicate)
