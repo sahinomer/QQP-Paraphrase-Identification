@@ -6,7 +6,7 @@ from qqp_dataframe import QQPDataFrame
 class ParaphraseIdentificator:
 
     def __init__(self):
-
+        self.model_name = None
         self.qqp_df = None
         self.word_embedding = None
         self.model = None

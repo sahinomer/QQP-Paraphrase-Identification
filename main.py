@@ -1,20 +1,22 @@
 import datetime
 
+from paraphrase_identificators.siamese_attention_paraphrase_identificator import SiameseAttentionParaphraseIdentificator
 from paraphrase_identificators.siamese_paraphrase_identificator import SiameseParaphraseIdentificator
 
 if __name__ == "__main__":
     train = True
-    model_path = 'models/model_' + str(datetime.datetime.now().date())
+
     if train:
-        identificator = SiameseParaphraseIdentificator()
-        identificator.initialize_dataset_frame(path='train.csv', test_rate=0.95)
+        identificator = SiameseAttentionParaphraseIdentificator()
+        identificator.initialize_dataset_frame(path='train.csv', test_rate=0.1)
         identificator.initialize_word_embedding(path='../PassageQueryProject/glove.840B.300d.txt')
         identificator.initialize_model()
-        evaluate_score = identificator.train_and_test(path=model_path, epochs=1, batch_size=64)
+        evaluate_score = identificator.train_and_test(path='models/', epochs=4, batch_size=64)
         print(evaluate_score)
 
     else:
-        identificator = SiameseParaphraseIdentificator()
+        model_path = 'models/model_' + str(datetime.datetime.now().date())
+        identificator = SiameseAttentionParaphraseIdentificator()
         identificator.load(path=model_path)
 
         while True:

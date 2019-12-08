@@ -1,6 +1,7 @@
 
 import os
 import pickle
+from datetime import datetime
 
 from keras import Input, Model
 from keras.engine.saving import load_model
@@ -17,6 +18,7 @@ from qqp_dataframe import QQPDataFrame
 class SiameseParaphraseIdentificator(ParaphraseIdentificator):
 
     def initialize_model(self):
+        self.model_name = 'siamese_dnn'
 
         lstm_network = Sequential(layers=[
             Embedding(self.word_embedding.vocabulary_size, self.word_embedding.dimensions,
@@ -71,6 +73,8 @@ class SiameseParaphraseIdentificator(ParaphraseIdentificator):
         return self.model.predict(x=[question1, question2])
 
     def save(self, path):
+        path += self.model_name + '_' + str(datetime.now().date())
+
         # Create directory if not exist
         if not os.path.exists(path):
             os.makedirs(path)
