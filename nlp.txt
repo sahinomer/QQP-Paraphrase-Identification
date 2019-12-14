@@ -1,4 +1,7 @@
 
+Train on 327474 samples, validate on 36387 samples
+Train on 327474 samples, validate on 36387 samples
+
 
 siamese
 
@@ -11,3 +14,31 @@ siamese
 
 Test
 [loss:0.3477534324696641, binary_crossentropy:0.3477534324696641, binary_accuracy:0.8462984491433682]
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+similarity = Lambda(euclidean_similarity,
+                    output_shape=euclidean_output_shape)([question1_lstm, question2_lstm])
+
+out = Dense(1, activation='sigmoid')(similarity)
+
+self.model.compile(optimizer=Adam(lr=1e-3),
+                           loss='mean_squared_error',
+                           metrics=['binary_crossentropy', 'binary_accuracy'])
+327474/327474 [==============================] - 1195s 4ms/step - loss: 0.1488 - binary_crossentropy: 0.4634 - binary_accuracy: 0.7907 - val_loss: 0.1749 - val_binary_crossentropy: 0.5298 - val_binary_accuracy: 0.7498
+[mse:0.17276270731035226, binary_crossentropy:0.5244555308161336, binary_accuracy:z0.7535927181205093]
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+dot_questions = dot([question1_lstm, question2_lstm], axes=1, normalize=True)
+
+out = Dense(1, activation='sigmoid')(dot_questions)
+
+self.model.compile(optimizer=Adam(lr=1e-3),
+                    loss='mean_squared_error',
+                    metrics=['binary_crossentropy', 'binary_accuracy'])
+
+327474/327474 [==============================] - 1225s 4ms/step - loss: 0.0844 - binary_crossentropy: 0.2852 - binary_accuracy: 0.8893 - val_loss: 0.1196 - val_binary_crossentropy: 0.3823 - val_binary_accuracy: 0.8347
+[mse:0.11937432466526561, binary_crossentropy:0.3813874629235656, binary_accuracy:0.8330406391569625]

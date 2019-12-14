@@ -8,10 +8,12 @@ from keras.optimizers import Adam
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
-from keras.layers import BatchNormalization, Bidirectional, LSTM, dot, Dense, Dropout, multiply, concatenate, subtract
+from keras.layers import BatchNormalization, Bidirectional, LSTM, Lambda, Dense, Dropout, \
+    dot, multiply, concatenate, subtract
 
 from paraphrase_identificators.paraphrase_identificator import ParaphraseIdentificator
 from qqp_dataframe import QQPDataFrame
+from utils import euclidean_similarity, euclidean_output_shape, contrastive_loss
 
 
 class SiameseParaphraseIdentificator(ParaphraseIdentificator):
@@ -36,6 +38,9 @@ class SiameseParaphraseIdentificator(ParaphraseIdentificator):
         question1_lstm = lstm_network(question1_input)
         question2_lstm = lstm_network(question2_input)
 
+        # similarity = Lambda(euclidean_similarity,
+        #                     output_shape=euclidean_output_shape)([question1_lstm, question2_lstm])
+
         dot_questions = dot([question1_lstm, question2_lstm], axes=1, normalize=True)
         subtract_q1q2 = subtract([question1_lstm, question2_lstm])
         subtract_q2q1 = subtract([question2_lstm, question1_lstm])
@@ -50,9 +55,9 @@ class SiameseParaphraseIdentificator(ParaphraseIdentificator):
         dense = Dense(128, activation='relu')(dense)
         dense = BatchNormalization()(dense)
         dense = Dropout(0.4)(dense)
-        out_ = Dense(1, activation='sigmoid')(dense)
+        out = Dense(1, activation='sigmoid')(dense)
 
-        self.model = Model(inputs=[question1_input, question2_input], outputs=out_)
+        self.model = Model(inputs=[question1_input, question2_input], outputs=out)
         self.model.compile(optimizer=Adam(lr=1e-3),
                            loss='binary_crossentropy',
                            metrics=['binary_crossentropy', 'binary_accuracy'])

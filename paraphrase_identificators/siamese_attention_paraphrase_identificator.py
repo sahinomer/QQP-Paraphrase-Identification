@@ -3,7 +3,6 @@ import pickle
 
 from keras import Input, Model
 from keras.activations import softmax
-from keras.engine.saving import load_model
 from keras.optimizers import Adam
 
 from keras.models import Sequential
@@ -12,7 +11,6 @@ from keras.layers import BatchNormalization, Bidirectional, LSTM, dot, Dense, Dr
     Concatenate, Lambda, Dot, Permute, GlobalAvgPool1D, GlobalMaxPool1D, Flatten
 
 from paraphrase_identificators.siamese_paraphrase_identificator import SiameseParaphraseIdentificator
-from qqp_dataframe import QQPDataFrame
 
 
 def unchanged_shape(input_shape):
@@ -92,9 +90,9 @@ class SiameseAttentionParaphraseIdentificator(SiameseParaphraseIdentificator):
         dense = Dense(128, activation='relu')(dense)
         dense = BatchNormalization()(dense)
         dense = Dropout(0.4)(dense)
-        out_ = Dense(1, activation='sigmoid')(dense)
+        out = Dense(1, activation='sigmoid')(dense)
 
-        self.model = Model(inputs=[question1_input, question2_input], outputs=out_)
+        self.model = Model(inputs=[question1_input, question2_input], outputs=out)
         self.model.compile(optimizer=Adam(lr=1e-3),
                            loss='binary_crossentropy',
                            metrics=['binary_crossentropy', 'binary_accuracy'])
