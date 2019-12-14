@@ -1,7 +1,6 @@
 
 import os
 import pickle
-from datetime import datetime
 
 from keras import Input, Model
 from keras.engine.saving import load_model
@@ -38,10 +37,11 @@ class SiameseParaphraseIdentificator(ParaphraseIdentificator):
         question2_lstm = lstm_network(question2_input)
 
         dot_questions = dot([question1_lstm, question2_lstm], axes=1, normalize=True)
-        subtract_questions = subtract([question1_lstm, question2_lstm])
+        subtract_q1q2 = subtract([question1_lstm, question2_lstm])
+        subtract_q2q1 = subtract([question2_lstm, question1_lstm])
         multiply_questions = multiply([question1_lstm, question2_lstm])
 
-        merged = concatenate([dot_questions, subtract_questions, multiply_questions])
+        merged = concatenate([dot_questions, subtract_q1q2, subtract_q2q1, multiply_questions])
 
         dense = BatchNormalization()(merged)
         dense = Dense(128, activation='relu')(dense)
@@ -55,7 +55,7 @@ class SiameseParaphraseIdentificator(ParaphraseIdentificator):
         self.model = Model(inputs=[question1_input, question2_input], outputs=out_)
         self.model.compile(optimizer=Adam(lr=1e-3),
                            loss='binary_crossentropy',
-                           metrics=['binary_crossentropy', 'accuracy'])
+                           metrics=['binary_crossentropy', 'binary_accuracy'])
 
     def train(self, epochs=10, batch_size=64):
         question1, question2, is_duplicate = self.qqp_df.get_train_data()
@@ -73,7 +73,6 @@ class SiameseParaphraseIdentificator(ParaphraseIdentificator):
         return self.model.predict(x=[question1, question2])
 
     def save(self, path):
-        path += self.model_name + '_' + str(datetime.now().date())
 
         # Create directory if not exist
         if not os.path.exists(path):

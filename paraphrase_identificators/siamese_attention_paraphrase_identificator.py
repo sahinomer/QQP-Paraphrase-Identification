@@ -97,5 +97,5 @@ class SiameseAttentionParaphraseIdentificator(SiameseParaphraseIdentificator):
         self.model = Model(inputs=[question1_input, question2_input], outputs=out_)
         self.model.compile(optimizer=Adam(lr=1e-3),
                            loss='binary_crossentropy',
-                           metrics=['binary_crossentropy', 'accuracy'])
+                           metrics=['binary_crossentropy', 'binary_accuracy'])
 

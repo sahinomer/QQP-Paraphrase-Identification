@@ -1,0 +1,13 @@
+
+
+siamese
+
+ merged = concatenate([dot_questions, subtract_q1q2, subtract_q2q1, multiply_questions])
+   self.model.compile(optimizer=Adam(lr=1e-3),
+                           loss='binary_crossentropy',
+                           metrics=['binary_crossentropy', 'binary_accuracy'])
+
+327474/327474 [==============================] - 1167s 4ms/step - loss: 0.2330 - binary_crossentropy: 0.2330 - binary_accuracy: 0.9022 - val_loss: 0.3521 - val_binary_crossentropy: 0.3521 - val_binary_accuracy: 0.8480
+
+Test
+[loss:0.3477534324696641, binary_crossentropy:0.3477534324696641, binary_accuracy:0.8462984491433682]

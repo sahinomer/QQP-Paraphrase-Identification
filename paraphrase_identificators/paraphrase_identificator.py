@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from embedding import WordEmbedding
 from qqp_dataframe import QQPDataFrame
 
@@ -21,6 +21,7 @@ class ParaphraseIdentificator:
         self.word_embedding.create_embedding_matrix(self.qqp_df.tokenizer)
 
     def train_and_test(self,  path, epochs=10, batch_size=64):
+        path += self.model_name + '_' + str(datetime.now().date())
         self.train(epochs=epochs, batch_size=batch_size)
         self.save(path)
         del self.model

@@ -7,7 +7,7 @@ if __name__ == "__main__":
     train = True
 
     if train:
-        identificator = SiameseAttentionParaphraseIdentificator()
+        identificator = SiameseParaphraseIdentificator()
         identificator.initialize_dataset_frame(path='train.csv', test_rate=0.1)
         identificator.initialize_word_embedding(path='../PassageQueryProject/glove.840B.300d.txt')
         identificator.initialize_model()
@@ -16,12 +16,10 @@ if __name__ == "__main__":
 
     else:
         model_path = 'models/model_' + str(datetime.datetime.now().date())
-        identificator = SiameseAttentionParaphraseIdentificator()
+        identificator = SiameseParaphraseIdentificator()
         identificator.load(path=model_path)
 
         while True:
-            # q1 = input('Q1:')
-            # q2 = input('Q2:')
 
             questions = input('Q1+Q2:')
             questions = questions.strip('\"')
