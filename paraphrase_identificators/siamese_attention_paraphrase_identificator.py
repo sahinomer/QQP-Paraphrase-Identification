@@ -1,14 +1,11 @@
-import os
-import pickle
-
 from keras import Input, Model
 from keras.activations import softmax
 from keras.optimizers import Adam
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
-from keras.layers import BatchNormalization, Bidirectional, LSTM, dot, Dense, Dropout, multiply, concatenate, subtract, \
-    Concatenate, Lambda, Dot, Permute, GlobalAvgPool1D, GlobalMaxPool1D, Flatten
+from keras.layers import BatchNormalization, Bidirectional, LSTM, Dense, Dropout, multiply, subtract, \
+    Concatenate, Lambda, Dot, Permute, GlobalAvgPool1D, GlobalMaxPool1D
 
 from paraphrase_identificators.siamese_paraphrase_identificator import SiameseParaphraseIdentificator
 
@@ -56,35 +53,34 @@ class SiameseAttentionParaphraseIdentificator(SiameseParaphraseIdentificator):
         q1_aligned, q2_aligned = soft_attention_alignment(question1_lstm, question2_lstm)
 
         # Compose
-        q1_sub = subtract([question1_lstm, q2_aligned])
-        q1_mult = multiply([question1_lstm, q2_aligned])
-        q1_submult = Concatenate()([q1_sub, q1_mult])
+        q1q2_sub = subtract([question1_lstm, q2_aligned])
+        q1q2_mult = multiply([question1_lstm, q2_aligned])
+        q1q2_submult = Concatenate()([q1q2_sub, q1q2_mult])
 
-        q2_sub = subtract([question2_lstm, q1_aligned])
-        q2_mult = multiply([question2_lstm, q1_aligned])
-        q2_submult = Concatenate()([q2_sub, q2_mult])
+        q2q1_sub = subtract([question2_lstm, q1_aligned])
+        q2q1_mult = multiply([question2_lstm, q1_aligned])
+        q2q1_submult = Concatenate()([q2q1_sub, q2q1_mult])
 
-        q1_combined = Concatenate()([question1_lstm, q2_aligned, q1_submult])
-        q2_combined = Concatenate()([question2_lstm, q1_aligned, q2_submult])
+        q1q2_combined = Concatenate()([question1_lstm, q2_aligned, q1q2_submult])
+        q2q1_combined = Concatenate()([question2_lstm, q1_aligned, q2q1_submult])
 
         compose = Bidirectional(LSTM(256, return_sequences=True))
-        q1_compare = compose(q1_combined)
-        q2_compare = compose(q2_combined)
+        q1q2_compare = compose(q1q2_combined)
+        q2q1_compare = compose(q2q1_combined)
 
         # Aggregate
-        q1_avg_pool = GlobalAvgPool1D()(q1_compare)
-        q1_max_pool = GlobalMaxPool1D()(q1_compare)
-        q1_rep = Concatenate()([q1_avg_pool, q1_max_pool])
-        q2_avg_pool = GlobalAvgPool1D()(q2_compare)
-        q2_max_pool = GlobalMaxPool1D()(q2_compare)
-        q2_rep = Concatenate()([q2_avg_pool, q2_max_pool])
+        q1q2_avg_pool = GlobalAvgPool1D()(q1q2_compare)
+        q1q2_max_pool = GlobalMaxPool1D()(q1q2_compare)
+        q1q2_concat = Concatenate()([q1q2_avg_pool, q1q2_max_pool])
+        q2q1_avg_pool = GlobalAvgPool1D()(q2q1_compare)
+        q2q1_max_pool = GlobalMaxPool1D()(q2q1_compare)
+        q2q1_concat = Concatenate()([q2q1_avg_pool, q2q1_max_pool])
 
         # Classifier
-        merged = Concatenate()([q1_rep, q2_rep])
-        # merged = Flatten()(merged)
+        merged = Concatenate()([q1q2_concat, q2q1_concat])
 
         dense = BatchNormalization()(merged)
-        dense = Dense(128, activation='relu')(dense)
+        dense = Dense(256, activation='relu')(dense)
         dense = BatchNormalization()(dense)
         dense = Dropout(0.4)(dense)
         dense = Dense(128, activation='relu')(dense)
