@@ -1,11 +1,12 @@
 from keras import Input, Model
-from keras.activations import softmax
 from keras.optimizers import Adam
 
 from keras.models import Sequential
 from keras.layers.embeddings import Embedding
 from keras.layers import BatchNormalization, Bidirectional, LSTM, Dense, Dropout, multiply, subtract, \
     Concatenate, Lambda, Dot, Permute, GlobalAvgPool1D, GlobalMaxPool1D
+
+import keras.backend as K
 
 from paraphrase_identificators.siamese_paraphrase_identificator import SiameseParaphraseIdentificator
 
@@ -16,11 +17,12 @@ def unchanged_shape(input_shape):
 
 
 def soft_attention_alignment(input_1, input_2):
+
     """Align text representation with neural soft attention"""
     attention = Dot(axes=-1)([input_1, input_2])
-    w_att_1 = Lambda(lambda x: softmax(x, axis=1),
+    w_att_1 = Lambda(lambda x: K.softmax(x, axis=1),
                      output_shape=unchanged_shape)(attention)
-    w_att_2 = Permute((2, 1))(Lambda(lambda x: softmax(x, axis=2),
+    w_att_2 = Permute((2, 1))(Lambda(lambda x: K.softmax(x, axis=2),
                                      output_shape=unchanged_shape)(attention))
     in1_aligned = Dot(axes=1)([w_att_1, input_1])
     in2_aligned = Dot(axes=1)([w_att_2, input_2])
