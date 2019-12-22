@@ -42,3 +42,12 @@ self.model.compile(optimizer=Adam(lr=1e-3),
 
 327474/327474 [==============================] - 1225s 4ms/step - loss: 0.0844 - binary_crossentropy: 0.2852 - binary_accuracy: 0.8893 - val_loss: 0.1196 - val_binary_crossentropy: 0.3823 - val_binary_accuracy: 0.8347
 [mse:0.11937432466526561, binary_crossentropy:0.3813874629235656, binary_accuracy:0.8330406391569625]
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Soft Attention Mechanism
+C:\PycharmProjects\QQP-Paraphrase-Identification\models\siamese_attention_dnn_2019-12-22
+
+327474/327474 [==============================] - 2011s 6ms/step - loss: 0.2086 - binary_crossentropy: 0.2086 - binary_accuracy: 0.9144 - val_loss: 0.3149 - val_binary_crossentropy: 0.3149 - val_binary_accuracy: 0.8687
+[0.3121551997603385, 0.3121551997603385, 0.8689307180577711]
