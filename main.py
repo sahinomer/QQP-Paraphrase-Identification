@@ -2,20 +2,31 @@ import datetime
 
 from paraphrase_identificators.siamese_attention_paraphrase_identificator import SiameseAttentionParaphraseIdentificator
 from paraphrase_identificators.siamese_paraphrase_identificator import SiameseParaphraseIdentificator
+from paraphrase_identificators.wmd_paraphrase_identificator import WordMoverDistanceParaphraseIdentificator
 
 if __name__ == "__main__":
-    train = True
+    train = False
+    model = 'wmd'
 
     if train:
-        identificator = SiameseAttentionParaphraseIdentificator()
-        identificator.initialize_dataset_frame(path='train.csv', test_rate=0.1)
-        identificator.initialize_word_embedding(path='../PassageQueryProject/glove.840B.300d.txt')
-        identificator.initialize_model()
-        evaluate_score = identificator.train_and_test(path='models/', epochs=4, batch_size=64)
+        if model == 'wmd':
+            identificator = WordMoverDistanceParaphraseIdentificator()
+            identificator.initialize_dataset_frame(path='train.csv', test_rate=0.1)
+            identificator.initialize_model()
+            evaluate_score = identificator.test()
+
+        else:
+            identificator = SiameseAttentionParaphraseIdentificator()
+            identificator.initialize_dataset_frame(path='train.csv', test_rate=0.1)
+            identificator.initialize_word_embedding(path='../PassageQueryProject/glove.840B.300d.txt')
+            identificator.initialize_model()
+            evaluate_score = identificator.train_and_test(path='models/', epochs=4, batch_size=64)
+
         print(evaluate_score)
 
     else:
-        model_path = 'models/model_' + str(datetime.datetime.now().date())
+        # model_path = 'models/model_' + str(datetime.datetime.now().date())
+        model_path = 'models/siamese_attention_dnn_2019-12-22_12-33'
         identificator = SiameseAttentionParaphraseIdentificator()
         identificator.load(path=model_path)
 
@@ -29,6 +40,11 @@ if __name__ == "__main__":
             print('Q1:', q1)
             print('Q2:', q2)
 
-            is_duplicate = identificator.predict(question1=q1, question2=q2)
-            print('is_duplicate:', is_duplicate)
-            print('-'*20)
+            similarity = identificator.predict(question1=q1, question2=q2)[0, 0]
+
+            print('Similarity:', similarity)
+            score_bar = '#' * int(round(similarity * 100)) + '-' * (100 - int(round(similarity * 100)))
+            score_bar = score_bar[:50] + '|' + score_bar[50:]
+            print('[%s]   %0.2f%%' % (score_bar, similarity*100))
+
+            print('\n' + '-'*120 + '\n')
