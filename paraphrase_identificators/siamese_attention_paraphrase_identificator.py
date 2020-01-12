@@ -39,7 +39,7 @@ class SiameseAttentionParaphraseIdentificator(SiameseParaphraseIdentificator):
                       weights=[self.word_embedding.embedding_matrix],
                       trainable=True, mask_zero=False),
 
-            BatchNormalization(axis=2),
+            BatchNormalization(),
 
             Bidirectional(LSTM(256, return_sequences=True)),
 

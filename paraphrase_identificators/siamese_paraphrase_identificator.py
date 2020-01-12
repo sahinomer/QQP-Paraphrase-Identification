@@ -26,7 +26,7 @@ class SiameseParaphraseIdentificator(ParaphraseIdentificator):
                       weights=[self.word_embedding.embedding_matrix],
                       trainable=True, mask_zero=False),
 
-            BatchNormalization(axis=2),
+            BatchNormalization(),
 
             Bidirectional(LSTM(256, return_sequences=False)),
 
@@ -66,7 +66,8 @@ class SiameseParaphraseIdentificator(ParaphraseIdentificator):
         question1, question2, is_duplicate = self.qqp_df.get_train_data()
 
         self.model.fit(x=[question1, question2], y=is_duplicate, epochs=epochs, batch_size=batch_size,
-                       validation_split=0.1, verbose=1)
+                       validation_split=0.1, verbose=1,
+                       class_weight=self.qqp_df.class_weights)
 
     def test(self, batch_size=64):
         question1, question2, is_duplicate = self.qqp_df.get_test_data()
