@@ -13,6 +13,7 @@ class ParaphraseIdentificator:
 
     def initialize_dataset_frame(self, path, test_rate=0.1):
         self.qqp_df = QQPDataFrame(path=path)
+        self.qqp_df.preprocess()
         self.qqp_df.split_train_test(test_rate=test_rate)
         self.qqp_df.fit_tokenizer()
 

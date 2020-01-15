@@ -61,3 +61,19 @@ C:\PycharmProjects\QQP-Paraphrase-Identification\models\siamese_attention_dnn_20
 
 word mover distance
 (1.5640443442692298, 0.6643993173217245)
+
+---------------------------------------------------------------------------------------------------------------------------
+
+soft atttention + preprocess
+327474/327474 [==============================] - 1876s 6ms/step - loss: 0.2409 - binary_crossentropy: 0.2409 - binary_accuracy: 0.8981 - val_loss: 0.3248 - val_binary_crossentropy: 0.3248 - val_binary_accuracy: 0.8600
+[0.3209092228076605, 0.3209092228076605, 0.8612382200998598]
+
+
+soft atttention + preprocess++
+327474/327474 [==============================] - 1879s 6ms/step - loss: 0.2405 - binary_crossentropy: 0.2405 - binary_accuracy: 0.8982 - val_loss: 0.3144 - val_binary_crossentropy: 0.3144 - val_binary_accuracy: 0.8625
+[0.30946718860797146, 0.30946718860797146, 0.8638106309974535]
+
+
+soft attention + preprocess++ + weights class
+327474/327474 [==============================] - 1883s 6ms/step - loss: 0.2459 - binary_crossentropy: 0.2459 - binary_accuracy: 0.8952 - val_loss: 0.3188 - val_binary_crossentropy: 0.3188 - val_binary_accuracy: 0.8619
+[0.31588850711130273, 0.31588850711130273, 0.8621781394631979]

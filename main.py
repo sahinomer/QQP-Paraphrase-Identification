@@ -5,8 +5,8 @@ from paraphrase_identificators.siamese_paraphrase_identificator import SiamesePa
 from paraphrase_identificators.wmd_paraphrase_identificator import WordMoverDistanceParaphraseIdentificator
 
 if __name__ == "__main__":
-    train = False
-    model = 'wmd'
+    train = True
+    model = 'sapi'
 
     if train:
         if model == 'wmd':
@@ -18,7 +18,8 @@ if __name__ == "__main__":
         else:
             identificator = SiameseAttentionParaphraseIdentificator()
             identificator.initialize_dataset_frame(path='train.csv', test_rate=0.1)
-            identificator.initialize_word_embedding(path='../PassageQueryProject/glove.840B.300d.txt')
+            # identificator.initialize_word_embedding(path='../PassageQueryProject/glove.840B.300d.txt')
+            identificator.initialize_word_embedding(path='enwiki_20180420_win10_500d.txt')
             identificator.initialize_model()
             evaluate_score = identificator.train_and_test(path='models/', epochs=4, batch_size=64)
 
@@ -26,7 +27,7 @@ if __name__ == "__main__":
 
     else:
         # model_path = 'models/model_' + str(datetime.datetime.now().date())
-        model_path = 'models/siamese_attention_dnn_2019-12-22_12-33'
+        model_path = 'models/siamese_attention_dnn+preprocess++_2020-01-15'
         identificator = SiameseAttentionParaphraseIdentificator()
         identificator.load(path=model_path)
 
