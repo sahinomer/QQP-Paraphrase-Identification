@@ -1,4 +1,3 @@
-import datetime
 
 from paraphrase_identificators.siamese_attention_paraphrase_identificator import SiameseAttentionParaphraseIdentificator
 from paraphrase_identificators.siamese_paraphrase_identificator import SiameseParaphraseIdentificator
