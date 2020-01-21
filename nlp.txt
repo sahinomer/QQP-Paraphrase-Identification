@@ -59,11 +59,6 @@ C:\PycharmProjects\QQP-Paraphrase-Identification\models\siamese_attention_dnn_20
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-word mover distance
-(1.5640443442692298, 0.6643993173217245)
-
----------------------------------------------------------------------------------------------------------------------------
-
 soft atttention + preprocess
 327474/327474 [==============================] - 1876s 6ms/step - loss: 0.2409 - binary_crossentropy: 0.2409 - binary_accuracy: 0.8981 - val_loss: 0.3248 - val_binary_crossentropy: 0.3248 - val_binary_accuracy: 0.8600
 [0.3209092228076605, 0.3209092228076605, 0.8612382200998598]
@@ -77,3 +72,23 @@ soft atttention + preprocess++
 soft attention + preprocess++ + weights class
 327474/327474 [==============================] - 1883s 6ms/step - loss: 0.2459 - binary_crossentropy: 0.2459 - binary_accuracy: 0.8952 - val_loss: 0.3188 - val_binary_crossentropy: 0.3188 - val_binary_accuracy: 0.8619
 [0.31588850711130273, 0.31588850711130273, 0.8621781394631979]
+
+--------------------------------------------------------------------------------------------------------------------------
+
+soft attention + preprocess++ + 500d word embedding
+327474/327474 [==============================] - 1972s 6ms/step - loss: 0.2618 - binary_crossentropy: 0.2618 - binary_accuracy: 0.8878 - val_loss: 0.3154 - val_binary_crossentropy: 0.3154 - val_binary_accuracy: 0.8625
+[0.31523596060193765, 0.31523596060193765, 0.8607435256958527]
+
+siamese_attention_dnn+8epoch+%87_2020-01-21
+soft attention + preprocess++ + 8 epoch
+327474/327474 [==============================] - 1883s 6ms/step - loss: 0.1776 - binary_crossentropy: 0.1776 - binary_accuracy: 0.9276 - val_loss: 0.3313 - val_binary_crossentropy: 0.3313 - val_binary_accuracy: 0.8714
+[0.33092244544382243, 0.33092244544382243, 0.8717010067119549]
+
+---------------------------------------------------------------------------------------------------------------------------
+
+word mover distance
+(1.5640443442692298, 0.6643993173217245)
+
+wmd + preprocess
+(1.2281292357982587, 0.6594523732963962)
+

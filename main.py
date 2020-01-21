@@ -6,7 +6,7 @@ from paraphrase_identificators.wmd_paraphrase_identificator import WordMoverDist
 
 if __name__ == "__main__":
     train = True
-    model = 'sapi'
+    model = ['wmd', 'siamese', 'siamese+attention'][2]
 
     if train:
         if model == 'wmd':
@@ -14,20 +14,24 @@ if __name__ == "__main__":
             identificator.initialize_dataset_frame(path='train.csv', test_rate=0.1)
             identificator.initialize_model()
             evaluate_score = identificator.test()
-
         else:
-            identificator = SiameseAttentionParaphraseIdentificator()
+            identificator = None
+            if model == 'siamese':
+                identificator = SiameseParaphraseIdentificator()
+
+            elif model == 'siamese+attention':
+                identificator = SiameseAttentionParaphraseIdentificator()
+
             identificator.initialize_dataset_frame(path='train.csv', test_rate=0.1)
-            # identificator.initialize_word_embedding(path='../PassageQueryProject/glove.840B.300d.txt')
-            identificator.initialize_word_embedding(path='enwiki_20180420_win10_500d.txt')
+            identificator.initialize_word_embedding(path='../PassageQueryProject/glove.840B.300d.txt')
             identificator.initialize_model()
-            evaluate_score = identificator.train_and_test(path='models/', epochs=4, batch_size=64)
+            identificator.model.summary()
+            evaluate_score = identificator.train_and_test(path='models/', epochs=8, batch_size=64)
 
         print(evaluate_score)
 
     else:
-        # model_path = 'models/model_' + str(datetime.datetime.now().date())
-        model_path = 'models/siamese_attention_dnn+preprocess++_2020-01-15'
+        model_path = 'models/siamese_attention_dnn+8epoch+%87_2020-01-21'
         identificator = SiameseAttentionParaphraseIdentificator()
         identificator.load(path=model_path)
 

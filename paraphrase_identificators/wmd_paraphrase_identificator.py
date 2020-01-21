@@ -6,10 +6,7 @@ from gensim.models import KeyedVectors
 from paraphrase_identificators.paraphrase_identificator import ParaphraseIdentificator
 from qqp_dataframe import QQPDataFrame
 
-import tensorflow.keras.backend as K
-from keras import losses, metrics
-
-from sklearn.metrics import log_loss, accuracy_score
+from sklearn.metrics import log_loss
 
 
 class WordMoverDistanceParaphraseIdentificator(ParaphraseIdentificator):
@@ -29,11 +26,13 @@ class WordMoverDistanceParaphraseIdentificator(ParaphraseIdentificator):
         for i, (q1, q2) in enumerate(zip(question1, question2)):
             distance[i] = self.model.wmdistance(q1, q2)
 
-        distance = 1-np.minimum(distance, 1)
-        loss = log_loss(is_duplicate, distance)
-        acc = np.mean(np.equal(is_duplicate, np.round(distance)), axis=-1)
+        similarity = 1-np.minimum(distance, 1)
+        loss = log_loss(is_duplicate, similarity)
+        acc = np.mean(np.equal(is_duplicate, np.round(similarity)), axis=-1)
 
         return loss, acc
 
     def predict(self, question1, question2):
-        return self.model.wmdistance(question1, question2)
+        distance = self.model.wmdistance(question1, question2)
+        similarity = 1-np.minimum(distance, 1)
+        return similarity
