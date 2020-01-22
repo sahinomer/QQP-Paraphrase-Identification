@@ -173,7 +173,7 @@ if __name__ == "__main__":
         #
         # print('Duplicated Rate:', is_duplicate.sum(), '/', len(is_duplicate), '=', is_duplicate.sum() / len(is_duplicate))
 
-        qqp_df = QQPDataFrame(path='train.csv')
+        qqp_df = QQPDataFrame(path='../train.csv')
         qqp_df.split_train_test(test_rate=0.95)
         qqp_df.fit_tokenizer()
         question1, question2, is_duplicate = qqp_df.get_train_data()

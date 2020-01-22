@@ -3,7 +3,7 @@ import numpy as np
 from embedding import WordEmbedding
 from qqp_dataframe import QQPDataFrame
 
-qqp_df = QQPDataFrame(path='train.csv')
+qqp_df = QQPDataFrame(path='../train.csv')
 qqp_df.split_train_test(test_rate=0.99)
 qqp_df.fit_tokenizer()
 

@@ -1,6 +1,5 @@
 import linecache
 import numpy as np
-from scipy.stats import ortho_group
 
 
 class WordEmbedding:
